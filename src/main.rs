@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use clap::Parser;
 
 #[derive(Debug, Parser)]
@@ -9,7 +11,7 @@ struct Opts {
 
 #[derive(Debug, Parser)]
 struct CsvOpts {
-    #[arg(short, long, default_value = "string")]
+    #[arg(short, long, value_parser = verify_input_file)]
     input: String,
 
     #[arg(short, long, default_value = "output.json")]
@@ -28,14 +30,15 @@ enum SubCommand {
     Csv(CsvOpts),
 }
 
-fn main() {
-    match Opts::try_parse() {
-        Ok(opts) => {
-            println!("{:?}", opts);
-        }
-        Err(e) => {
-            eprintln!("Error parsing arguments: {}", e);
-            std::process::exit(1);
-        }
+fn verify_input_file(filename: &str) -> Result<String, String> {
+    if Path::new(filename).exists() {
+        Ok(filename.into())
+    } else {
+        Err("File does not exist".into())
     }
+}
+
+fn main() {
+    let opts: Opts = Opts::parse();
+    println!("{:?}", opts)
 }
