@@ -1,12 +1,28 @@
-use std::path::Path;
-
 use clap::Parser;
+use csv::Reader;
+use serde::{Deserialize, Serialize};
+use std::{path::Path, result};
 
 #[derive(Debug, Parser)]
 #[command(name="rcli",version,author,about,long_about = None)]
 struct Opts {
     #[command(subcommand)]
     cmd: SubCommand,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+
+struct Iris {
+    #[serde(rename = "Sepal.Length")]
+    sepal_length: String,
+    #[serde(rename = "Sepal.Width")]
+    sepal_width: String,
+    #[serde(rename = "Petal.Length")]
+    setal_length: String,
+    #[serde(rename = "Petal.Width")]
+    setal_width: String,
+    #[serde(rename = "Species")]
+    species: String,
 }
 
 #[derive(Debug, Parser)]
@@ -38,7 +54,16 @@ fn verify_input_file(filename: &str) -> Result<String, String> {
     }
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let opts: Opts = Opts::parse();
-    println!("{:?}", opts)
+    match opts.cmd {
+        SubCommand::Csv(opts) => {
+            let mut reader = Reader::from_path(opts.input)?;
+            for result in reader.deserialize::<Iris>() {
+                let record: Iris = result?;
+                println!("{:?}", record);
+            }
+        }
+    }
+    Ok(())
 }
