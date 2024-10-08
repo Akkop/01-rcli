@@ -1,7 +1,8 @@
+use std::path::Path;
+
 use clap::Parser;
 use csv::Reader;
 use serde::{Deserialize, Serialize};
-use std::{path::Path, result};
 
 #[derive(Debug, Parser)]
 #[command(name="rcli",version,author,about,long_about = None)]
