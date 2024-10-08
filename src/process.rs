@@ -1,6 +1,6 @@
+use anyhow::Result;
 use csv::Reader;
 use serde::{Deserialize, Serialize};
-use anyhow::Result;
 use std::fs;
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -17,10 +17,9 @@ pub struct Iris {
     species: String,
 }
 
-
-pub fn process_csv(input:&str,output:&str) -> Result<()>{
+pub fn process_csv(input: &str, output: &str) -> Result<()> {
     let mut reader = Reader::from_path(input)?;
-    let mut ret= Vec::with_capacity(300);
+    let mut ret = Vec::with_capacity(300);
     for result in reader.deserialize::<Iris>() {
         let record: Iris = result?;
         ret.push(record);

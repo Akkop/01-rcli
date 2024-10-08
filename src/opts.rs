@@ -15,7 +15,6 @@ pub enum SubCommand {
     Csv(CsvOpts),
 }
 
-
 #[derive(Debug, Parser)]
 pub struct CsvOpts {
     #[arg(short, long, value_parser = verify_input_file)]
