@@ -37,5 +37,5 @@ fn main() {
             eprintln!("Error parsing arguments: {}", e);
             std::process::exit(1);
         }
-    }
+   }
 }
